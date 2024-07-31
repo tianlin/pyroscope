@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"strings"
 
@@ -58,6 +60,10 @@ func (p *RawProfile) ParseToPprof(_ context.Context, md ingestion.Metadata) (*di
 				},
 			},
 		})
+	}
+
+	if len(profiles.Profiles) == 0 {
+		log.Printf("no profiles found in jfr: %s\n", base64.StdEncoding.EncodeToString(r))
 	}
 	res.RawProfileSize = rawSize
 	res.RawProfileType = distributormodel.RawProfileTypeJFR
